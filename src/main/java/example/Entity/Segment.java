@@ -45,7 +45,7 @@ public class Segment {
     }
 
     /**
-     * 将报文段信息转为字节流，不足一个字节补零
+     * 将报文段信息转为字节流，不足一个字节补零，末尾添加TAIL表示界符
      */
     public byte[] serialize() {
         ByteBuffer buffer = ByteBuffer.allocate(Global.MSS);
@@ -80,7 +80,7 @@ public class Segment {
     @Override
     public String toString() {
         return "Segment{" +
-                "type=" + type +
+                "type=" + ((type == Global.TYPE_ACK) ? "ACK" : "PACK") +
                 ", segNo=" + segNo +
                 ", ackNo=" + ackNo +
                 ", data='" + data + '\'' +

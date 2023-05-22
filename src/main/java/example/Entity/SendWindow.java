@@ -13,6 +13,22 @@ public class SendWindow {
     private int cacheSize;
     private int windowSize;
 
+    public int getPosBeg() {
+        return posBeg;
+    }
+
+    public int getPosEnd() {
+        return posEnd;
+    }
+
+    public int getPosCur() {
+        return posCur;
+    }
+
+    public Segment getSpecifiedSegment (int index) {
+        return segmentList[index].segment;
+    }
+
     public SendWindow()
     {
         windowSize = Global.SEND_WIND;
@@ -48,14 +64,22 @@ public class SendWindow {
                     break;
                 }
             }
-            // todo:根据ACK报文返回的接收窗口大小调整发送窗口
+            // 根据ACK报文返回的接收窗口大小调整发送窗口
             changeWindowSize(ackSeg.winSize);
-      // 移动发送窗口的结尾指针，重新调整发送窗口
-          if (flag) {
-            this.posEnd = Math.min(this.posBeg + this.windowSize, this.cacheSize);
-            System.out.println("ACK" + ackSeg.ackNo + "已确认");
-          }
+            // 移动发送窗口的结尾指针，重新调整发送窗口
+            if (flag) {
+                this.posEnd = Math.min(this.posBeg + this.windowSize, this.cacheSize);
+                System.out.println("ACK" + ackSeg.ackNo + "已确认");
+            }
         }
+    }
+
+    /**
+     *
+     * @return 当前窗口是否有报文段可以发送
+     */
+    public boolean isAvailable() {
+        return this.posEnd != this.posCur;
     }
 
     /**
@@ -84,14 +108,9 @@ public class SendWindow {
         this.windowSize = newSize;
     }
 
-    public int getWindowSize() {
-        return windowSize;
-    }
-
-    public void setWindowSize(int windowSize) {
-        this.windowSize = windowSize;
-    }
-
+    /**
+     * 打印当前发送窗口状态信息
+     */
     public void printSendWindow() {
         int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
         int pos1 = 0, pos2 = 0;
@@ -100,7 +119,12 @@ public class SendWindow {
         for(int i = posCur; i < posEnd; i++)
             win2[pos2++] = segmentList[i].segment.segNo;
         System.out.println("当前发送窗口状态为：");
+        System.out.println("beg: " + this.posBeg + ", cur: "+ this.posCur + ", end: " + this.posEnd);
         System.out.println("已发送报文：" + Arrays.toString(win1));
         System.out.println("未发送报文：" + Arrays.toString(win2));
+    }
+
+    public boolean isAllAck() {
+        return this.posBeg == this.posCur;
     }
 }
