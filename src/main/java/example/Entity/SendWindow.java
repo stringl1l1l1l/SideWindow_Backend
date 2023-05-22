@@ -48,7 +48,7 @@ public class SendWindow {
      *  倒序遍历当前已发送窗口，找到ACK确认的报文段，将之前的报文段表明为已确认，并移动发送窗口
      * @param ackSeg 确认报文
      */
-    public void captureACK(Segment ackSeg)
+    public synchronized void captureACK(Segment ackSeg)
     {
         // 当前接收到了ACK报文
         if(ackSeg.type == Global.TYPE_ACK) {
@@ -78,7 +78,7 @@ public class SendWindow {
      *
      * @return 当前窗口是否有报文段可以发送
      */
-    public boolean isAvailable() {
+    public synchronized boolean isAvailable() {
         return this.posEnd != this.posCur;
     }
 
@@ -92,7 +92,6 @@ public class SendWindow {
         while(posCur < posEnd) {
             list.add(segmentList[posCur].segment);
             segmentList[posCur].isSend = true;
-            segmentList[posCur].timeStamp = System.currentTimeMillis();
             posCur++;
         }
         return list;
@@ -102,7 +101,7 @@ public class SendWindow {
      * @param newSize 新窗口大小
      *  改变发送窗口大小，并移动结束指针，要求移动后的结束指针不能小于当前指针
      */
-    public void changeWindowSize(int newSize) {
+    public synchronized void changeWindowSize(int newSize) {
         int newEnd = this.posBeg + newSize;
         assert (newEnd >= posCur);
         this.windowSize = newSize;
@@ -111,7 +110,7 @@ public class SendWindow {
     /**
      * 打印当前发送窗口状态信息
      */
-    public void printSendWindow() {
+    public synchronized void printSendWindow() {
         int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
         int pos1 = 0, pos2 = 0;
         for(int i = posBeg; i < posCur; i++)
@@ -124,7 +123,7 @@ public class SendWindow {
         System.out.println("未发送报文：" + Arrays.toString(win2));
     }
 
-    public boolean isAllAck() {
+    public synchronized boolean isAllAck() {
         return this.posBeg == this.posCur;
     }
 }

@@ -75,9 +75,17 @@ public class Server {
         // 初始化部分，启动发送端监听连接，并将一些报文段写入发送端缓存
         Server server = new Server();
         // 开启服务器前先初始化，因为服务器监听会阻塞该进程
-        for (int i = 0; i < 6; i++) {
-            Segment segment = new Segment(Global.TYPE_PACK, 0, "hello" + i);
-            server.sendWindow.insertSegment(segment);
+        Segment segment =
+                new Segment(
+                        "windowSize = Global.REC_WIND;\n"
+                                + "        posBeg = 0;\n"
+                                + "        posCur = 1;\n"
+                                + "        posEnd = windowSize;\n"
+                                + "        cacheSize = 0;\n"
+                                + "        segmentList = new SegmentInfo[Global.MAX_CACHE_SIZE];"); // 一个char占2字节
+        ArrayList<Segment> pieces = segment.slice(5);
+        for(Segment piece : pieces) {
+            server.sendWindow.insertSegment(piece);
         }
         server.sendWindow.printSendWindow();
 
@@ -88,7 +96,7 @@ public class Server {
         }
 
         Timer timer = new Timer();
-        // 定时器线程，每隔5s扫描一次发送窗口的已发送部分，检查是否已经ACK
+        // 定时器线程，每隔一定时间扫描一次发送窗口的已发送部分，检查是否已经ACK
         TimerTask task =
                 new TimerTask() {
                     @Override
@@ -100,7 +108,7 @@ public class Server {
                                     i++) {
                                 Segment curSeg = server.sendWindow.getSpecifiedSegment(i);
                                 try {
-                                    System.out.println("5s未收到ACK，超时重传：");
+                                    System.out.println(Global.PERIOD_MS/1000 + "s内未收到ACK，超时重传：");
                                     server.sendByteStream(curSeg.serialize());
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -139,12 +147,12 @@ public class Server {
                 ArrayList<Segment> segments = server.sendWindow.getAvailable();
                 if (!segments.isEmpty()) {
                     // 如有可发送报文段，将这些报文段序列化成字节流，发送到接收端
-                    byte[] stream = new byte[Global.MSS];
+                    byte[] stream = new byte[(Global.MSS + Segment.SOLID_LEN) * 5];
                     int i = 0;
                     for (Segment curSeg : segments) {
-                        byte[] curSegBytes = curSeg.serialize();
+                        byte[] curSegBytes = curSeg.segStream;
                         // 一次传输的字节长度不能超过MSS
-                        assert (curSeg.len + i < Global.MSS);
+//                        assert (curSeg.len + i < Global.MSS);
                         for (int k = 0; k < curSeg.len; k++) {
                             stream[i++] = curSegBytes[k];
                         }
@@ -153,10 +161,6 @@ public class Server {
                     server.sendByteStream(stream);
                 }
             }
-//            else {
-//                System.out.println(server.sendWindow.getPosCur());
-//                System.out.println(server.sendWindow.getPosEnd());
-//            }
         }
     }
 }

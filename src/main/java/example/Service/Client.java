@@ -28,6 +28,7 @@ public class Client {
         out = clientSocket.getOutputStream();
         printWriter = new PrintWriter(clientSocket.getOutputStream(),true);
         in = new DataInputStream(clientSocket.getInputStream());
+        receiveWindow = new ReceiveWindow(Global.MAX_CACHE_SIZE);
     }
 
     public Segment readByteStream2Segment() throws IOException
@@ -74,29 +75,28 @@ public class Client {
                     // 子线程，持续监听是否有报文发送过来
                     @Override
                     public void run() {
-                        int expectNextSegNo = 0; // 希望下一次收到的按序到达的报文段序号
                         while (true) {
+                            int ackNo = -1;
                             try {
                                 // 发送端发送未完毕，继续
                                 if (client.in.available() != 0) {
                                     Segment segment = client.readByteStream2Segment();
-                                    // 如果最近一次收到的报文段序号是按序到达的，则修改希望按序到达的下一个序号
-                                    if (expectNextSegNo == 0 || expectNextSegNo == segment.segNo)
-                                        expectNextSegNo = segment.segNo + 1;
                                     System.out.println("客户端接收到报文: " + segment.toString());
+                                    client.receiveWindow.capturePack(segment);
                                 }
-                                // 发送端一次发送完毕，接收端返回对按序到达的最后一个报文段的ACK
-                                else if(expectNextSegNo != 0){
+                                // 接收端返回对按序到达的最后一个报文段的ACK
+                                else if ((ackNo = client.receiveWindow.needACK()) != -1) {
                                     Segment segment =
                                             new Segment(
                                                     Global.TYPE_ACK,
-                                                    expectNextSegNo,
+                                                    ackNo,
                                                     4,
                                                     4,
-                                                    "Hello Server, ack " + expectNextSegNo);
+                                                    "Hello Server, ack " + ackNo);
                                     System.out.println("确认报文：" + segment.toString());
                                     client.sendByteStream(segment.segStream);
-                                    expectNextSegNo = 0;
+                                    client.receiveWindow.hasSendACK();
+                                    client.receiveWindow.printReceivedData();
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -105,29 +105,5 @@ public class Client {
                     }
                 };
         clientListenThd.start();
-
-        Semaphore semaphore = new Semaphore(Global.SEND_WIND);
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // 定时任务的具体操作
-               semaphore.release();
-            }
-        };
-        // 延迟 1 秒后开始执行任务，每隔 1 秒执行一次
-        timer.schedule(task, 1000, 1000);
-
-//        int i = 101;
-//        while(true) {
-//          try {
-//              Segment segment1 = new Segment(Global.TYPE_ACK, i, 4, 4, "HELLO" + i);
-//              client.sendByteStream(segment1.segStream);
-//              semaphore.acquire();
-//          } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//          }
-//          i++;
-//        }
     }
 }

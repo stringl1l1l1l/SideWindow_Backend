@@ -1,16 +1,23 @@
 package example.Entity;
 
 public class SegmentInfo {
-    Segment segment;
-    boolean isSend;
-    boolean isAck;
-    long timeStamp;
+    public Segment segment;
+    public int segNo;
+    public boolean isSend;
+    public boolean isAck;
+
+    public SegmentInfo(int segNo) {
+        this.segNo = segNo;
+        isSend = false;
+        isAck = false;
+        segment = null;
+    }
 
     public SegmentInfo(Segment segment) {
+        this.segNo = segment.segNo;
         this.segment = segment;
         this.isSend = false;
         this.isAck = false;
-        this.timeStamp = System.currentTimeMillis();
     }
 
 }
