@@ -34,15 +34,21 @@ public class Client {
     public Segment readByteStream2Segment() throws IOException
     {
         byte[] buffer = new byte[1024];
-        byte byteRead = -1;
+        int byteRead;
         int i = 0;
-        while ((byteRead = in.readByte()) != -1)
-            buffer[i++] = byteRead;
-        buffer[i++] = -1; // 读到-1会拒收，所以末尾加个-1
+        int recentMinusOneCnt = 0; // 检查是否读到了连续的4个-1
+        do {
+            byteRead = in.read();
+            buffer[i++] = (byte) byteRead;
+
+            if (byteRead != 255)
+                recentMinusOneCnt = 0;
+            else
+                recentMinusOneCnt++;
+        } while (recentMinusOneCnt < 4);
 
         byte[] newBuffer = new byte[i];
-        for(int j = 0; j < i; j++)
-            newBuffer[j] = buffer[j];
+        System.arraycopy(buffer, 0, newBuffer, 0, i);
 
         System.out.println("客户端接收到字节流: " + Arrays.toString(newBuffer));
         return new Segment().deserialize(newBuffer);
@@ -91,7 +97,7 @@ public class Client {
                                                     ackNo,
                                                     4,
                                                     4,
-                                                    "Hello Server, ack " + ackNo);
+                                                    "Hello Server, ACK" + ackNo);
                                     System.out.println("确认报文：" + segment.toString());
                                     client.sendByteStream(segment.segStream);
                                     client.receiveWindow.hasSendACK();

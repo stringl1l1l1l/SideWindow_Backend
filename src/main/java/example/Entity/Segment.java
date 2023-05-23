@@ -17,7 +17,7 @@ public class Segment {
     public int winSize;
     public int len;
     public int checksum;
-    private final byte TAIL = -1;
+    private final int TAIL = 0xffffffff;
 
     public byte[] segStream;
 
@@ -84,7 +84,7 @@ public class Segment {
         buffer.putInt(winSize);
         buffer.putInt(checksum);
         buffer.put(data.getBytes(StandardCharsets.UTF_8));
-        buffer.put(TAIL);
+        buffer.putInt(TAIL);
         // 不要多余的字节
         byte[] bytes = Arrays.copyOfRange(buffer.array(), 0, buffer.position());
         this.segStream = bytes;
@@ -102,7 +102,7 @@ public class Segment {
         this.winSize = buffer.getInt();
         this.checksum = buffer.getInt();
         // 读取字符串
-        this.data = new String(buffer.array(), buffer.position(), buffer.remaining() - 1, StandardCharsets.UTF_8);
+        this.data = new String(buffer.array(), buffer.position(), buffer.remaining() - 4, StandardCharsets.UTF_8);
         return this;
     }
 

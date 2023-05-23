@@ -6,13 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="11ee3d85-c452-4e1e-a5ab-da431495278a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/Global.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Client$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Client$1.class" afterDir="false" />
@@ -141,7 +138,7 @@
       <workItem from="1684330689442" duration="14456000" />
       <workItem from="1684721937207" duration="9946000" />
       <workItem from="1684753287956" duration="20825000" />
-      <workItem from="1684799901221" duration="1410000" />
+      <workItem from="1684799901221" duration="3801000" />
     </task>
     <servers />
   </component>

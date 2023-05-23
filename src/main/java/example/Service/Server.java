@@ -56,6 +56,7 @@ public class Server {
         ArrayList<Segment> pieces = segment.slice(Global.SLICE_SIZE);
         for(Segment piece : pieces)
             this.sendWindow.insertSegment(piece);
+        this.sendWindow.changeWindowSize(Global.SEND_WIND);
     }
 
     /**
@@ -66,15 +67,21 @@ public class Server {
     public Segment readByteStream2Segment() throws IOException
     {
         byte[] buffer = new byte[2048];
-        byte byteRead = -1;
+        int byteRead;
         int i = 0;
-        while ((byteRead = in.readByte()) != -1)
-            buffer[i++] = byteRead;
-        buffer[i++] = -1; // 读到-1会拒收，所以末尾加个-1
+        int recentMinusOneCnt = 0; // 检查是否读到了连续的4个-1
+        do {
+            byteRead = in.read();
+            buffer[i++] = (byte) byteRead;
+
+            if (byteRead != 255)
+                recentMinusOneCnt = 0;
+            else
+                recentMinusOneCnt++;
+        } while (recentMinusOneCnt < 4);
 
         byte[] newBuffer = new byte[i];
-        for(int j = 0; j < i; j++)
-            newBuffer[j] = buffer[j];
+        System.arraycopy(buffer, 0, newBuffer, 0, i);
 
         Segment segment = new Segment();
         segment.deserialize(newBuffer);
@@ -92,12 +99,67 @@ public class Server {
         // 初始化部分，启动发送端监听连接，并将一些报文段写入发送端缓存
         Server server = new Server();
         // 开启服务器前先初始化发送缓存，因为服务器开启后会阻塞该线程
-        server.sendMsg("windowSize = Global.REC_WIND;\n"
-                                + "        posBeg = 0;\n"
-                                + "        posCur = 1;\n"
-                                + "        posEnd = windowSize;\n"
-                                + "        cacheSize = 0;\n"
-                                + "        segmentList = new SegmentInfo[Global.MAX_CACHE_SIZE];");
+        server.sendMsg(
+                "    /**\n"
+                        + "     * 发送报文段解析出的字节流\n"
+                        + "     * @param stream 字节流\n"
+                        + "     *\n"
+                        + "     */\n"
+                        + "    public void sendByteStream(byte[] stream) throws IOException\n"
+                        + "    {\n"
+                        + "        System.out.println(\"已发送字节流：\");\n"
+                        + "        System.out.println(Arrays.toString(stream));\n"
+                        + "        System.out.println(\"已发送报文：\" + new Segment().deserialize(stream));\n"
+                        + "        out.write(stream);\n"
+                        + "    }\n"
+                        + "\n"
+                        + "    /**\n"
+                        + "     * 发送一个任意长度字符串，存入发送缓存区\n"
+                        + "     * @param msg 任意长度的字符串\n"
+                        + "     */\n"
+                        + "    public void sendMsg(String msg) {\n"
+                        + "        Segment segment = new Segment(msg);\n"
+                        + "        ArrayList<Segment> pieces = segment.slice(Global.SLICE_SIZE);\n"
+                        + "        for(Segment piece : pieces)\n"
+                        + "            this.sendWindow.insertSegment(piece);\n"
+                        + "        this.sendWindow.changeWindowSize(Global.SEND_WIND);\n"
+                        + "    }\n"
+                        + "\n"
+                        + "    /**\n"
+                        + "     * 读取客户端输入的字节流，并解析成报文段\n"
+                        + "     * @return 解析出的报文段\n"
+                        + "     *\n"
+                        + "     */\n"
+                        + "    public Segment readByteStream2Segment() throws IOException\n"
+                        + "    {\n"
+                        + "        byte[] buffer = new byte[2048];\n"
+                        + "        int byteRead;\n"
+                        + "        int i = 0;\n"
+                        + "        int recentMinusOneCnt = 0; // 检查是否读到了连续的4个-1\n"
+                        + "        do {\n"
+                        + "            byteRead = in.read();\n"
+                        + "            buffer[i++] = (byte) byteRead;\n"
+                        + "\n"
+                        + "            if (byteRead != 255)\n"
+                        + "                recentMinusOneCnt = 0;\n"
+                        + "            else\n"
+                        + "                recentMinusOneCnt++;\n"
+                        + "        } while (recentMinusOneCnt < 4);\n"
+                        + "\n"
+                        + "        byte[] newBuffer = new byte[i];\n"
+                        + "        System.arraycopy(buffer, 0, newBuffer, 0, i);\n"
+                        + "\n"
+                        + "        Segment segment = new Segment();\n"
+                        + "        segment.deserialize(newBuffer);\n"
+                        + "        return segment;\n"
+                        + "    }\n"
+                        + "\n"
+                        + "    public void stop() throws IOException {\n"
+                        + "        in.close();\n"
+                        + "        out.close();\n"
+                        + "        client.close();\n"
+                        + "        server.close();\n"
+                        + "    }");
         server.sendWindow.printSendWindow();
 
         try {
@@ -128,7 +190,7 @@ public class Server {
                         }
                     }
                 };
-        timer.schedule(task, Global.PERIOD_MS, Global.PERIOD_MS);
+         timer.schedule(task, Global.PERIOD_MS, Global.PERIOD_MS);
 
         // 子线程，持续监听接受端是否有报文发送过来，如果是ACK报文就收下，并做一些判断处理
         Thread ackListenThd = new Thread() {

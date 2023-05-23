@@ -12,10 +12,10 @@ public class Global {
     public static final int TYPE_PACK = 1;
     public static final int SEND_WIND = 4;
     public static final int REC_WIND = 4;
-    public static final int MAX_CACHE_SIZE = 2000;
-    public static final int PERIOD_MS = 3000;
-    public static final int MAX_DATA_SIZE = 5000;
-    public static final int INIT_SEG_NO = 100;
-    public static final int SLICE_SIZE = 10;
+    public static final int MAX_CACHE_SIZE = 2000; // 缓冲中窗口最大个数
+    public static final int PERIOD_MS = 3000; // 定时周期
+    public static final int MAX_DATA_SIZE = 5000; // 一次允许发送的最大字符串长度
+    public static final int INIT_SEG_NO = 100; // 初始报文段序号
+    public static final int SLICE_SIZE = 10; // 分片数据部分大小
 
 }

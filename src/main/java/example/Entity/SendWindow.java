@@ -66,13 +66,11 @@ public class SendWindow {
                     break;
                 }
             }
-            // 根据ACK报文返回的接收窗口大小调整发送窗口
+            // 根据ACK报文返回的接收窗口大小调整发送窗口和尾指针
             changeWindowSize(ackSeg.winSize);
-            // 移动发送窗口的结尾指针，重新调整发送窗口
-            if (flag) {
-                this.posEnd = Math.min(this.posBeg + this.windowSize, this.cacheSize);
+            if (flag)
                 System.out.println("ACK" + ackSeg.ackNo + "已确认");
-            }
+
         }
     }
 
@@ -104,9 +102,10 @@ public class SendWindow {
      *  改变发送窗口大小，并移动结束指针，要求移动后的结束指针不能小于当前指针
      */
     public synchronized void changeWindowSize(int newSize) {
-        int newEnd = this.posBeg + newSize;
+        int newEnd = Math.min(this.posBeg + this.windowSize, this.cacheSize);
         assert (newEnd >= posCur);
         this.windowSize = newSize;
+        this.posEnd = newEnd;
     }
 
     /**
