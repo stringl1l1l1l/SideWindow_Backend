@@ -16,5 +16,6 @@ public class Global {
     public static final int PERIOD_MS = 3000;
     public static final int MAX_DATA_SIZE = 5000;
     public static final int INIT_SEG_NO = 100;
+    public static final int SLICE_SIZE = 10;
 
 }

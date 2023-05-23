@@ -45,8 +45,9 @@ public class ReceiveWindow {
 
     public synchronized void capturePack(Segment packSeg) {
         if(packSeg.type == Global.TYPE_PACK) {
-            // 如果序号落入接收窗口内，且不是重复报文段，且按序到达，则将报文段放入接收窗口
+            // 如果序号落入接收窗口内，且不是重复报文段，且未出错，且按序到达，则将报文段放入接收窗口
             if (!segmentList[this.posCur].isAck
+                    && !packSeg.hasError()
                     && segmentList[this.posCur].segNo == packSeg.segNo) {
 
                 segmentList[this.posCur].segment = packSeg;

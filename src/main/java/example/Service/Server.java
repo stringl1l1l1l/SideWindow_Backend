@@ -8,7 +8,6 @@ import example.Entity.SendWindow;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Server {
@@ -35,18 +34,35 @@ public class Server {
         in = new DataInputStream(client.getInputStream());
     }
 
+    /**
+     * 发送报文段解析出的字节流
+     * @param stream 字节流
+     *
+     */
     public void sendByteStream(byte[] stream) throws IOException
     {
         System.out.println("已发送字节流：");
         System.out.println(Arrays.toString(stream));
+        System.out.println("已发送报文：" + new Segment().deserialize(stream));
         out.write(stream);
     }
 
-    public String readByteStream2String() throws IOException
-    {
-        return in.readUTF();
+    /**
+     * 发送一个任意长度字符串，存入发送缓存区
+     * @param msg 任意长度的字符串
+     */
+    public void sendMsg(String msg) {
+        Segment segment = new Segment(msg);
+        ArrayList<Segment> pieces = segment.slice(Global.SLICE_SIZE);
+        for(Segment piece : pieces)
+            this.sendWindow.insertSegment(piece);
     }
 
+    /**
+     * 读取客户端输入的字节流，并解析成报文段
+     * @return 解析出的报文段
+     *
+     */
     public Segment readByteStream2Segment() throws IOException
     {
         byte[] buffer = new byte[2048];
@@ -54,6 +70,7 @@ public class Server {
         int i = 0;
         while ((byteRead = in.readByte()) != -1)
             buffer[i++] = byteRead;
+        buffer[i++] = -1; // 读到-1会拒收，所以末尾加个-1
 
         byte[] newBuffer = new byte[i];
         for(int j = 0; j < i; j++)
@@ -74,19 +91,13 @@ public class Server {
     public static void main(String[] args) throws IOException {
         // 初始化部分，启动发送端监听连接，并将一些报文段写入发送端缓存
         Server server = new Server();
-        // 开启服务器前先初始化，因为服务器监听会阻塞该进程
-        Segment segment =
-                new Segment(
-                        "windowSize = Global.REC_WIND;\n"
+        // 开启服务器前先初始化发送缓存，因为服务器开启后会阻塞该线程
+        server.sendMsg("windowSize = Global.REC_WIND;\n"
                                 + "        posBeg = 0;\n"
                                 + "        posCur = 1;\n"
                                 + "        posEnd = windowSize;\n"
                                 + "        cacheSize = 0;\n"
-                                + "        segmentList = new SegmentInfo[Global.MAX_CACHE_SIZE];"); // 一个char占2字节
-        ArrayList<Segment> pieces = segment.slice(5);
-        for(Segment piece : pieces) {
-            server.sendWindow.insertSegment(piece);
-        }
+                                + "        segmentList = new SegmentInfo[Global.MAX_CACHE_SIZE];");
         server.sendWindow.printSendWindow();
 
         try {
@@ -117,7 +128,7 @@ public class Server {
                         }
                     }
                 };
-        timer.schedule(task, 0, Global.PERIOD_MS);
+        timer.schedule(task, Global.PERIOD_MS, Global.PERIOD_MS);
 
         // 子线程，持续监听接受端是否有报文发送过来，如果是ACK报文就收下，并做一些判断处理
         Thread ackListenThd = new Thread() {
@@ -147,18 +158,9 @@ public class Server {
                 ArrayList<Segment> segments = server.sendWindow.getAvailable();
                 if (!segments.isEmpty()) {
                     // 如有可发送报文段，将这些报文段序列化成字节流，发送到接收端
-                    byte[] stream = new byte[(Global.MSS + Segment.SOLID_LEN) * 5];
-                    int i = 0;
                     for (Segment curSeg : segments) {
-                        byte[] curSegBytes = curSeg.segStream;
-                        // 一次传输的字节长度不能超过MSS
-//                        assert (curSeg.len + i < Global.MSS);
-                        for (int k = 0; k < curSeg.len; k++) {
-                            stream[i++] = curSegBytes[k];
-                        }
+                        server.sendByteStream(curSeg.serialize());
                     }
-                    stream = Arrays.copyOfRange(stream, 0, i);
-                    server.sendByteStream(stream);
                 }
             }
         }

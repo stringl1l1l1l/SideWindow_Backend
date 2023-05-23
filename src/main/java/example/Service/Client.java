@@ -38,15 +38,14 @@ public class Client {
         int i = 0;
         while ((byteRead = in.readByte()) != -1)
             buffer[i++] = byteRead;
+        buffer[i++] = -1; // 读到-1会拒收，所以末尾加个-1
 
         byte[] newBuffer = new byte[i];
         for(int j = 0; j < i; j++)
             newBuffer[j] = buffer[j];
 
-        System.out.println(Arrays.toString(newBuffer));
-        Segment segment = new Segment();
-        segment.deserialize(newBuffer);
-        return segment;
+        System.out.println("客户端接收到字节流: " + Arrays.toString(newBuffer));
+        return new Segment().deserialize(newBuffer);
     }
 
     public void sendByteStream(byte[] stream) throws IOException

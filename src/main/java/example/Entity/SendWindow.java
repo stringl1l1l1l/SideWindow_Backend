@@ -55,7 +55,9 @@ public class SendWindow {
             boolean flag = false; // 用于标识ACK确认号是否落在已发送窗口中，如果没有，什么也不做
             for (int i = posCur - 1; i >= posBeg; i--) {
                 // 找到已发送的，与(确认号 - 1)一致且没有被重复确认的报文段
-                if(segmentList[i].isSend && !segmentList[i].isAck
+                if(segmentList[i].isSend
+                        && !ackSeg.hasError()
+                        && !segmentList[i].isAck
                         && segmentList[i].segment.segNo == ackSeg.ackNo - 1)
                 {
                     flag = true;
@@ -86,7 +88,7 @@ public class SendWindow {
      * 获取当前发送窗口所有可用的报文
      * @return 待发送的报文段列表
      */
-    public ArrayList<Segment> getAvailable()
+    public synchronized ArrayList<Segment> getAvailable()
     {
         ArrayList<Segment> list = new ArrayList<>();
         while(posCur < posEnd) {
