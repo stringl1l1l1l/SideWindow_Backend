@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="SideWindows:war exploded" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11ee3d85-c452-4e1e-a5ab-da431495278a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/SideWindows_ear_exploded.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/SideWindows_war_exploded2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/META-INF/application.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SideWindows.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/Test/FormServletLiveTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ClientServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ServerServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ExtraInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Model/JsonPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Service/Global.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Service/client/PackListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/ACKListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/SendThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/utils/GlobalExceptionFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/Global.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/SendThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/SystemInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/ui/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/Global.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/SegmentInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/SegmentInfo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Client$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Client$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Server$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Server$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Client$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Client.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Scanner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/SendThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/SystemInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/ui/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +83,13 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -49,10 +98,14 @@
     </option>
   </component>
   <component name="ProjectId" id="2Pb6fj0DnySdCsxWpLfk26NAhBu" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -62,26 +115,21 @@
     <property name="settings.editor.selected.configurable" value="google-java-format.settings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Application.Client">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Programming\SideWindows\src\main\java\example\Controller" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.All in SideWindows">
     <configuration name="Client" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.Service.Client" />
+      <option name="MAIN_CLASS_NAME" value="example.Service.client.Client" />
       <module name="SideWindows" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="example.Entity.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ConnectionManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.socket.ConnectionManager" />
-      <module name="SideWindows" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="example.Entity.*" />
+          <option name="PATTERN" value="example.Service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -90,11 +138,11 @@
       </method>
     </configuration>
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.Service.Server" />
+      <option name="MAIN_CLASS_NAME" value="example.Service.server.Server" />
       <module name="SideWindows" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="example.Entity.*" />
+          <option name="PATTERN" value="example.Service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -102,25 +150,112 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.Test" />
+    <configuration name="All in SideWindows" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SideWindows" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="example.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Tomcat" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="1.8 (2)" nameIsGenerated="true">
+      <option name="OPEN_IN_BROWSER" value="false" />
+      <deployment>
+        <artifact name="SideWindows:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/SideWindows_war_exploded" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="7e517c68-e401-42f7-ae58-030c6c5b59df" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="57707" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="SideWindows:war exploded" />
+        </option>
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Client" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Tomcat Server.Tomcat" />
+      <item itemvalue="JUnit.All in SideWindows" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in SideWindows" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
-        <item itemvalue="Application.Test" />
-        <item itemvalue="Application.ConnectionManager" />
       </list>
     </recent_temporary>
   </component>
@@ -138,12 +273,24 @@
       <workItem from="1684330689442" duration="14456000" />
       <workItem from="1684721937207" duration="9946000" />
       <workItem from="1684753287956" duration="20825000" />
-      <workItem from="1684799901221" duration="3801000" />
+      <workItem from="1684799901221" duration="4813000" />
+      <workItem from="1684817381702" duration="1365000" />
+      <workItem from="1684852533867" duration="703000" />
+      <workItem from="1684922906770" duration="3215000" />
+      <workItem from="1684940008965" duration="3844000" />
+      <workItem from="1684945054458" duration="1558000" />
+      <workItem from="1684946655706" duration="995000" />
+      <workItem from="1684978521640" duration="27403000" />
+      <workItem from="1685014061865" duration="771000" />
+      <workItem from="1685066533365" duration="9349000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -151,6 +298,9 @@
         <watch expression="posCur" />
         <watch expression="curSegBytes" />
         <watch expression="curSeg" />
+        <watch expression="posBeg" />
+        <watch expression="posEnd" />
+        <watch expression="segmentList" />
       </configuration>
     </watches-manager>
   </component>

@@ -1,0 +1,40 @@
+package example.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+
+public class Global {
+    public static int SERVER_PORT = 6666;
+    public static String SERVER_IP = "127.0.0.1";
+    public static int CLIENT_PORT = 6666;
+    public static String CLIENT_IP = "127.0.0.1";
+    public static final int MSS = 100;
+    public static final int TYPE_ACK = 0;
+    public static final int TYPE_PACK = 1;
+    public static final int SEND_WIND = 4;
+    public static final int REC_WIND = 4;
+    public static final int MAX_CACHE_SIZE = 2000; // 缓冲中窗口最大个数
+    public static final int PERIOD_MS = 3000; // 定时周期
+    public static final int MAX_DATA_SIZE = 5000; // 一次允许发送的最大字符串长度
+    public static final int INIT_SEG_NO = 100; // 初始报文段序号
+    public static final int SLICE_SIZE = 10; // 分片数据部分大小
+
+    /** 配置响应，允许跨域请求 */
+    public static void allowCors(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        // 允许跨域的请求方法GET, POST, HEAD 等
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        // 重新预检验跨域的缓存时间 (s)
+        response.setHeader("Access-Control-Max-Age", "4200");
+        // 允许跨域的请求头
+        response.setHeader("Access-Control-Allow-Headers", "*");
+    }
+}

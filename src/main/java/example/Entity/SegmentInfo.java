@@ -5,6 +5,7 @@ public class SegmentInfo {
     public int segNo;
     public boolean isSend;
     public boolean isAck;
+    public int randomNo;
 
     public SegmentInfo(int segNo) {
         this.segNo = segNo;
