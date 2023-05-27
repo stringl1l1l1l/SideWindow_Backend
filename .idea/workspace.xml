@@ -10,54 +10,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11ee3d85-c452-4e1e-a5ab-da431495278a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ClientWebSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ServerWebSocket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ClientServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ClientServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ServerServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ServerServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ExtraInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ExtraInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/Segment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Model/JsonPack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Model/JsonPack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Global.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/client/PackListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/client/PackListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/server/ACKListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/ACKListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/server/SendThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/SendThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/utils/GlobalExceptionFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/utils/GlobalExceptionFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ClientServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ClientServlet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ServerServlet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ServerServlet$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ServerServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Controller/ServerServlet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/ExtraInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/ExtraInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/ReceiveWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/ReceiveWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/Segment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/SegmentInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/SegmentInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/SendWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Entity/SendWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Model/JsonPack.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Model/JsonPack.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/Global.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/Global.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/client/PackListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/client/PackListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/ACKListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/ACKListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/SendThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/SendThread.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/utils/GsonUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/utils/GsonUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/utils/GlobalExceptionFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/utils/GlobalExceptionFilter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Controller/ClientServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Controller/ClientServlet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Controller/ServerServlet$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Controller/ServerServlet$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Controller/ServerServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Controller/ServerServlet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/ExtraInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/ExtraInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/ReceiveWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/Segment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/SegmentInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/SegmentInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Entity/SendWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Model/JsonPack.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Model/JsonPack.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/Global.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/Global.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/client/PackListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/client/PackListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/Service/server/ACKListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/server/ACKListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/server/SendThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/server/SendThread.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/server/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/example/utils/GsonUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/utils/GsonUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/example/utils/GlobalExceptionFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/utils/GlobalExceptionFilter.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,6 +122,19 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="example.Service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerWebSocket" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.Controller.ServerWebSocket" />
+      <module name="SideWindows" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.Controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -247,11 +240,13 @@
     <list>
       <item itemvalue="Application.Client" />
       <item itemvalue="Application.Server" />
+      <item itemvalue="Application.ServerWebSocket" />
       <item itemvalue="JUnit.All in SideWindows" />
       <item itemvalue="Tomcat Server.Tomcat" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ServerWebSocket" />
         <item itemvalue="JUnit.All in SideWindows" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
@@ -283,7 +278,8 @@
       <workItem from="1685014061865" duration="771000" />
       <workItem from="1685066533365" duration="22260000" />
       <workItem from="1685090404759" duration="17057000" />
-      <workItem from="1685157291539" duration="306000" />
+      <workItem from="1685157291539" duration="17151000" />
+      <workItem from="1685178247236" duration="8368000" />
     </task>
     <servers />
   </component>

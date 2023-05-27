@@ -51,7 +51,9 @@ public class Client {
     public void stopConnection() throws IOException {
         if (in != null) in.close();
         if (out != null) out.close();
-        if (clientSocket != null) clientSocket.close();
+        if (clientSocket != null) {
+            clientSocket.close();
+        }
         in = null;
         out = null;
         clientSocket = null;

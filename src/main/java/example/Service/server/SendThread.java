@@ -1,9 +1,13 @@
 package example.Service.server;
 
+import example.Controller.ServerWebSocket;
+import example.Entity.ExtraInfo;
 import example.Entity.Segment;
 import example.Service.Global;
+import example.utils.GsonUtils;
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 public class SendThread extends Thread {
@@ -17,12 +21,25 @@ public class SendThread extends Thread {
     @Override
     public void run() {
         // 主线程持续监听是否有可发送报文
+        ArrayList<Segment> tmp = new ArrayList<>();
         while (!Thread.interrupted()) {
             try {
-                ArrayList<Segment> tmp = new ArrayList<>();
                 Global.readyToSend.acquire();
                 // 获取当前所有可发送的报文段
-                if (server.sendWindow.isAvailable()) {
+                if (server.sendWindow.available() != 0) {
+                    String res =
+                            GsonUtils.msg2Json(
+                                    HttpServletResponse.SC_OK,
+                                    "返回已发送报文段",
+                                    tmp,
+                                    new ExtraInfo(server.sendWindow.getSendWindow()));
+                    if (ServerWebSocket.session != null) {
+                        log.info("向webSocket发送数据");
+                        ServerWebSocket.session.getBasicRemote().sendText(res);
+                    } else {
+                        log.error("未检测到webSocket");
+                    }
+                    server.sendWindow.hasReceiveACK();
                     ArrayList<Segment> segments = server.sendWindow.getAvailable();
                     if (!segments.isEmpty()) {
                         // 如有可发送报文段，将这些报文段序列化成字节流，发送到接收端
@@ -32,9 +49,6 @@ public class SendThread extends Thread {
                         tmp.addAll(segments);
                     }
                 }
-                // 全局通知报文发送完毕
-                Global.hasSendPack.release();
-                Global.sendSegArrayList = tmp;
             } catch (Exception e) {
                 e.printStackTrace();
                 break;

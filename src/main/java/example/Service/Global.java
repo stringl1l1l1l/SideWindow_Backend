@@ -30,22 +30,4 @@ public class Global {
     public static Semaphore receiveDone = new Semaphore(0);
     public static ExecutorService executor = Executors.newCachedThreadPool();
     public static ArrayList<Segment> sendSegArrayList = null;
-
-    /** 配置响应，允许跨域请求 */
-    public static void allowCors(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            request.setCharacterEncoding("utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        // 允许跨域的请求方法GET, POST, HEAD 等
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        // 重新预检验跨域的缓存时间 (s)
-        response.setHeader("Access-Control-Max-Age", "4200");
-        // 允许跨域的请求头
-        response.setHeader("Access-Control-Allow-Headers", "*");
-    }
 }

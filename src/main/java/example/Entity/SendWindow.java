@@ -13,7 +13,8 @@ public class SendWindow {
     private final SegmentInfo[] segmentList;
     private int cacheSize;
     private int windowSize;
-    private final Logger log = Logger.getLogger(SendWindow.class);
+
+    private final transient Logger log = Logger.getLogger(SendWindow.class);
 
     public int getPosBeg() {
         return posBeg;
@@ -60,8 +61,8 @@ public class SendWindow {
                         && !segmentList[i].isAck
                         && segmentList[i].segment.segNo == ackSeg.ackNo - 1) {
                     flag = true;
-                    // 移动发送窗口的起始指针到确认号报文处
-                    this.posBeg = i + 1;
+
+//                    this.posBeg = i + 1;
                     break;
                 }
             }
@@ -72,10 +73,15 @@ public class SendWindow {
     }
 
     /**
-     * @return 当前窗口是否有报文段可以发送
+     * @return 当前窗口有多少报文段可以发送
      */
-    public synchronized boolean isAvailable() {
-        return this.posEnd != this.posCur;
+    public synchronized int available() {
+        return this.posEnd - this.posCur;
+    }
+
+    public synchronized void hasReceiveACK() {
+        // 移动发送窗口的起始指针到已确认报文处
+        this.posBeg = this.posCur;
     }
 
     public boolean hasCached() {
@@ -107,10 +113,10 @@ public class SendWindow {
     }
 
     public int[][] getSendWindow() {
-        int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
+        int[] win1 = new int[posCur - posBeg], win2 = new int[windowSize];
         int pos1 = 0, pos2 = 0;
         for (int i = posBeg; i < posCur; i++) win1[pos1++] = segmentList[i].segment.segNo;
-        for (int i = posCur; i < posEnd; i++) win2[pos2++] = segmentList[i].segment.segNo;
+        for (int i = 0; i < windowSize; i++) win2[pos2++] = segmentList[posBeg].segment.segNo + i;
         return new int[][] {win1, win2};
     }
     /**
@@ -119,9 +125,10 @@ public class SendWindow {
      * @return
      */
     public synchronized void printSendWindow() {
-        int[] win1, win2;
-        win1 = getSendWindow()[0];
-        win2 = getSendWindow()[1];
+        int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
+        int pos1 = 0, pos2 = 0;
+        for (int i = posBeg; i < posCur; i++) win1[pos1++] = segmentList[i].segment.segNo;
+        for (int i = posCur; i < posEnd; i++) win2[pos2++] = segmentList[i].segment.segNo;
         log.info("当前发送窗口状态为：");
         log.info("beg: " + this.posBeg + ", cur: " + this.posCur + ", end: " + this.posEnd);
         log.info("已发送报文：" + Arrays.toString(win1));

@@ -36,24 +36,8 @@ public class ServerServlet extends HttpServlet {
     private SendThread sendThread = null;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        Global.allowCors(req, resp);
-        String url = req.getRequestURI();
-    }
-
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        Global.allowCors(req, resp);
-        super.doOptions(req, resp);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Global.allowCors(req, resp);
-
         BufferedReader reader = req.getReader();
         PrintWriter out = resp.getWriter();
 
@@ -70,9 +54,10 @@ public class ServerServlet extends HttpServlet {
             scanner = new Scanner(server);
 
             // 创建发送线程
-            if (sendThread != null) sendThread.interrupt();
-            sendThread = new SendThread(server);
-            Global.executor.execute(sendThread);
+            if (sendThread == null) {
+                sendThread = new SendThread(server);
+                Global.executor.execute(sendThread);
+            }
 
             // 在子线程中运行阻塞方法
             if (startThread == null) {
@@ -102,19 +87,22 @@ public class ServerServlet extends HttpServlet {
 
         } else if (url.endsWith("/stop")) {
             try {
-                if (startThread != null) {
+                if (server != null) {
                     server.stop();
                     Global.executor.shutdownNow();
                     Global.hasSendPack = new Semaphore(0);
                     Global.readyToSend = new Semaphore(0);
                     Global.executor = Executors.newCachedThreadPool();
-                    server = null;
-                    startThread = null;
                     out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "服务端已关闭"));
                 } else // 未检测到启动进程，说明没有启动
                 out.println(
                             GsonUtils.msg2Json(
                                     HttpServletResponse.SC_SERVICE_UNAVAILABLE, "服务端未启动"));
+                server = null;
+                startThread = null;
+                ackListener = null;
+                scanner = null;
+                sendThread = null;
             } catch (IOException e) {
                 out.println(
                         GsonUtils.msg2Json(
@@ -124,17 +112,12 @@ public class ServerServlet extends HttpServlet {
             if (server != null) {
                 server.sendMsg(requestBodyJson.extra.data);
                 Global.readyToSend.release();
-                try {
-                    Global.hasSendPack.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                out.println(
-                        GsonUtils.msg2Json(
-                                HttpServletResponse.SC_OK,
-                                "发送成功!",
-                                Global.sendSegArrayList,
-                                new ExtraInfo(server.sendWindow.getSendWindow())));
+                //                try {
+                //                    Global.hasSendPack.acquire();
+                //                } catch (InterruptedException e) {
+                //                    e.printStackTrace();
+                //                }
+                out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "发送成功!"));
             }
         }
     }

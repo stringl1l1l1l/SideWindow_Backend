@@ -29,23 +29,8 @@ public class ClientServlet extends HttpServlet {
     private Thread receivePackThread = null;
 
     @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        Global.allowCors(req, resp);
-        super.doOptions(req, resp);
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        super.doGet(req, resp);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Global.allowCors(req, resp);
-
         BufferedReader reader = req.getReader();
         PrintWriter out = resp.getWriter();
 
@@ -58,7 +43,6 @@ public class ClientServlet extends HttpServlet {
         String url = req.getRequestURI();
         if (url.endsWith("/connect")) {
             client = new Client();
-
             client.startConnection(requestBodyJson.extra.host, requestBodyJson.extra.port);
             packListener = new PackListener(client);
             packListener.start();
@@ -69,18 +53,19 @@ public class ClientServlet extends HttpServlet {
                                     + requestBodyJson.extra.host
                                     + ":"
                                     + requestBodyJson.extra.port));
-        } else if (url.endsWith("/check")) {
-            log.info("正在探测");
-            try {
-                Global.receiveDone.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            String recData = client.receiveWindow.getReceivedData();
-            out.println(
-                    GsonUtils.msg2Json(
-                            HttpServletResponse.SC_OK, "返回客户端已接收数据", new ExtraInfo(recData)));
-            log.info("探测完成");
+            //        } else if (url.endsWith("/check")) {
+            //            log.info("正在探测");
+            //            try {
+            //                Global.receiveDone.acquire();
+            //            } catch (InterruptedException e) {
+            //                e.printStackTrace();
+            //            }
+            //            String recData = client.receiveWindow.getReceivedData();
+            //            out.println(
+            //                    GsonUtils.msg2Json(
+            //                            HttpServletResponse.SC_OK, "返回客户端已接收数据", new
+            // ExtraInfo(recData)));
+            //            log.info("探测完成");
         } else if (url.endsWith("/stop")) {
             try {
                 if (client != null) {
@@ -89,6 +74,7 @@ public class ClientServlet extends HttpServlet {
                     client = null;
                     if (receivePackThread != null) receivePackThread.interrupt();
                     receivePackThread = null;
+                    packListener = null;
                     Global.receiveDone = new Semaphore(0);
                     out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "客户端已断开连接"));
                 } else {

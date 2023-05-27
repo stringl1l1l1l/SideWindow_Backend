@@ -7,8 +7,10 @@ import example.Entity.SendWindow;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.*;
 
 public class Server {
@@ -22,7 +24,9 @@ public class Server {
 
     public void start(int port) throws IOException {
         sendWindow = new SendWindow();
-        server = new ServerSocket(port);
+        server = new ServerSocket();
+        server.setReuseAddress(true); // 开启复用TIME_WAIT状态端口
+        server.bind(new InetSocketAddress(port));
         log.info("服务端启动，端口 " + port);
         client = server.accept(); // 阻塞当前线程，等待客户端连接，连接成功后返回连接到的客户端Socket
         log.info("监听到客户端连接");
@@ -86,8 +90,14 @@ public class Server {
     public void stop() throws IOException {
         if (in != null) in.close();
         if (out != null) out.close();
-        if (client != null) client.close();
-        if (server != null) server.close();
+        if (client != null) {
+            client.close();
+        }
+        if (server != null) {
+            server.setReuseAddress(true);
+            server.close();
+        }
+
         in = null;
         out = null;
         client = null;
