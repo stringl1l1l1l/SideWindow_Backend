@@ -5,10 +5,10 @@ public class ExtraInfo {
     public String host;
     public String data;
     public boolean startSuccess;
-    public int[][] sendWin;
+    public SendWindow sendWin;
     public int[] recWin;
 
-    public ExtraInfo(int[][] sendWin) {
+    public ExtraInfo(SendWindow sendWin) {
         this.sendWin = sendWin;
     }
 

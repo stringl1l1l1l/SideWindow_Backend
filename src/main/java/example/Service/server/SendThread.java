@@ -32,10 +32,11 @@ public class SendThread extends Thread {
                                     HttpServletResponse.SC_OK,
                                     "返回已发送报文段",
                                     tmp,
-                                    new ExtraInfo(server.sendWindow.getSendWindow()));
+                                    new ExtraInfo(server.sendWindow));
                     if (ServerWebSocket.session != null) {
                         log.info("向webSocket发送数据");
                         ServerWebSocket.session.getBasicRemote().sendText(res);
+                        tmp.clear();
                     } else {
                         log.error("未检测到webSocket");
                     }

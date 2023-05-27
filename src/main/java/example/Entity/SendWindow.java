@@ -62,7 +62,7 @@ public class SendWindow {
                         && segmentList[i].segment.segNo == ackSeg.ackNo - 1) {
                     flag = true;
 
-//                    this.posBeg = i + 1;
+                    //                    this.posBeg = i + 1;
                     break;
                 }
             }
