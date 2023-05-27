@@ -17,17 +17,11 @@ public class Server {
     public OutputStream out;
     public DataInputStream in;
     public SendWindow sendWindow;
-    public ReceiveWindow receiveWindow;
 
     private final Logger log = Logger.getLogger(Server.class);
 
-    public Server() {
-        sendWindow = new SendWindow();
-        receiveWindow = new ReceiveWindow();
-    }
-
     public void start(int port) throws IOException {
-
+        sendWindow = new SendWindow();
         server = new ServerSocket(port);
         log.info("服务端启动，端口 " + port);
         client = server.accept(); // 阻塞当前线程，等待客户端连接，连接成功后返回连接到的客户端Socket
@@ -55,7 +49,7 @@ public class Server {
      *
      * @param msg 任意长度的字符串
      */
-    public void sendMsg(String msg) {
+    public synchronized void sendMsg(String msg) {
         Segment segment = new Segment(msg);
         ArrayList<Segment> pieces = segment.slice(Global.SLICE_SIZE);
         for (Segment piece : pieces) this.sendWindow.insertSegment(piece);
@@ -94,6 +88,11 @@ public class Server {
         if (out != null) out.close();
         if (client != null) client.close();
         if (server != null) server.close();
+        in = null;
+        out = null;
+        client = null;
+        server = null;
+        Segment.acceleratePACK = Global.INIT_SEG_NO;
         log.info("服务端已关闭");
     }
 

@@ -1,6 +1,7 @@
 package example.Service.server;
 
 import example.Entity.Segment;
+import example.Service.Global;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -16,13 +17,11 @@ public class SendThread extends Thread {
     @Override
     public void run() {
         // 主线程持续监听是否有可发送报文
-        while (true) {
+        while (!Thread.interrupted()) {
             try {
+                ArrayList<Segment> tmp = new ArrayList<>();
+                Global.readyToSend.acquire();
                 // 获取当前所有可发送的报文段
-                if (Thread.interrupted()) {
-                    log.info("发送线程已中断");
-                    break;
-                }
                 if (server.sendWindow.isAvailable()) {
                     ArrayList<Segment> segments = server.sendWindow.getAvailable();
                     if (!segments.isEmpty()) {
@@ -30,10 +29,15 @@ public class SendThread extends Thread {
                         for (Segment curSeg : segments) {
                             server.sendByteStream(curSeg.serialize());
                         }
+                        tmp.addAll(segments);
                     }
                 }
+                // 全局通知报文发送完毕
+                Global.hasSendPack.release();
+                Global.sendSegArrayList = tmp;
             } catch (Exception e) {
-                this.interrupt();
+                e.printStackTrace();
+                break;
             }
         }
     }

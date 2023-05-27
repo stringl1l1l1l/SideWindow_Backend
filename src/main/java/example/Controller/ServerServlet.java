@@ -1,6 +1,7 @@
 package example.Controller;
 
 import com.google.gson.Gson;
+import example.Entity.ExtraInfo;
 import example.Service.Global;
 import example.Model.JsonPack;
 import example.Service.server.ACKListener;
@@ -20,6 +21,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.SocketException;
 import java.util.Timer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 @WebServlet("/server/*")
 public class ServerServlet extends HttpServlet {
@@ -30,11 +34,6 @@ public class ServerServlet extends HttpServlet {
     private ACKListener ackListener = null;
     private Scanner scanner = null;
     private SendThread sendThread = null;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -66,10 +65,15 @@ public class ServerServlet extends HttpServlet {
 
         String url = req.getRequestURI();
         if (url.endsWith("/start")) {
-            // 创建监听线程
             server = new Server();
             ackListener = new ACKListener(server);
             scanner = new Scanner(server);
+
+            // 创建发送线程
+            if (sendThread != null) sendThread.interrupt();
+            sendThread = new SendThread(server);
+            Global.executor.execute(sendThread);
+
             // 在子线程中运行阻塞方法
             if (startThread == null) {
                 startThread =
@@ -78,21 +82,15 @@ public class ServerServlet extends HttpServlet {
                             public void run() {
                                 try {
                                     server.start(requestBodyJson.extra.port);
-                                    // 运行监听线程
-                                    ackListener.start();
-                                    scanner.start();
+                                    Global.executor.execute(ackListener);
+                                    Global.executor.execute(scanner);
                                 } catch (IOException e) {
-                                    if (!(e instanceof SocketException)) {
-                                        out.println(
-                                                GsonUtils.msg2Json(
-                                                        HttpServletResponse
-                                                                .SC_INTERNAL_SERVER_ERROR,
-                                                        e.getMessage()));
-                                    }
+                                    e.printStackTrace();
                                 }
                             }
                         };
                 startThread.start();
+
                 out.println(
                         GsonUtils.msg2Json(
                                 HttpServletResponse.SC_OK,
@@ -101,16 +99,16 @@ public class ServerServlet extends HttpServlet {
                 out.println(
                         GsonUtils.msg2Json(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "请勿重复启动"));
             }
+
         } else if (url.endsWith("/stop")) {
             try {
                 if (startThread != null) {
                     server.stop();
-                    startThread.interrupt();
-                    if (sendThread != null) sendThread.interrupt();
-                    if (ackListener != null) ackListener.interrupt();
-                    if (scanner != null) scanner.cancel();
-                    ackListener = null;
-                    scanner = null;
+                    Global.executor.shutdownNow();
+                    Global.hasSendPack = new Semaphore(0);
+                    Global.readyToSend = new Semaphore(0);
+                    Global.executor = Executors.newCachedThreadPool();
+                    server = null;
                     startThread = null;
                     out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "服务端已关闭"));
                 } else // 未检测到启动进程，说明没有启动
@@ -125,13 +123,18 @@ public class ServerServlet extends HttpServlet {
         } else if (url.endsWith("/send")) {
             if (server != null) {
                 server.sendMsg(requestBodyJson.extra.data);
-                // 将旧发送线程断开
-                if (sendThread != null) sendThread.interrupt();
-                sendThread = new SendThread(server);
-                sendThread.start();
+                Global.readyToSend.release();
+                try {
+                    Global.hasSendPack.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 out.println(
                         GsonUtils.msg2Json(
-                                HttpServletResponse.SC_OK, "发送成功: " + requestBodyJson.extra.data));
+                                HttpServletResponse.SC_OK,
+                                "发送成功!",
+                                Global.sendSegArrayList,
+                                new ExtraInfo(server.sendWindow.getSendWindow())));
             }
         }
     }

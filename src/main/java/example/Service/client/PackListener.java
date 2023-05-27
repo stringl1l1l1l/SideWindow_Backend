@@ -40,9 +40,12 @@ public class PackListener extends Thread {
                     client.receiveWindow.hasSendACK();
                     client.receiveWindow.printReceivedData();
                     client.receiveWindow.printRecWindow();
+                    // 全局通知此时接收端的接收内容已更新
+                    Global.receiveDone.release();
                 }
             } catch (IOException e) {
                 this.interrupt();
+                e.printStackTrace();
             }
         }
     }

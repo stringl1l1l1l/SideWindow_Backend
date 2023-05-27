@@ -28,6 +28,7 @@ public class ACKListener extends Thread {
                 }
             } catch (IOException e) {
                 this.interrupt();
+                e.printStackTrace();
             }
         }
     }

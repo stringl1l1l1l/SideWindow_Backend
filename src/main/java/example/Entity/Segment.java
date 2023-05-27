@@ -1,5 +1,6 @@
 package example.Entity;
 
+import com.google.gson.annotations.Expose;
 import example.Service.Global;
 import org.apache.log4j.Logger;
 
@@ -10,9 +11,13 @@ import java.util.Arrays;
 
 public class Segment {
 
-    public static final int SOLID_LEN = 25;
-    private static int acceleratePACK = Global.INIT_SEG_NO;
-    private static int accelerateACK = Global.INIT_SEG_NO;
+    public static final transient int SOLID_LEN = 25;
+    public static transient int acceleratePACK = Global.INIT_SEG_NO;
+    public static transient int accelerateACK = Global.INIT_SEG_NO;
+    private final transient int TAIL = 0xffffffff;
+    public transient byte[] segStream;
+    private final transient Logger log = Logger.getLogger(Segment.class);
+
     public int type;
     public int segNo;
     public int ackNo;
@@ -20,11 +25,6 @@ public class Segment {
     public int winSize;
     public int len;
     public int checksum;
-    private final int TAIL = 0xffffffff;
-
-    private final Logger log = Logger.getLogger(Segment.class);
-
-    public byte[] segStream;
 
     public Segment() {}
 
@@ -38,7 +38,6 @@ public class Segment {
         this.checksum = 0;
         this.segStream = serialize();
         this.calculateCheckSum();
-        log.info("累加器情况：" + this.toString());
     }
 
     public Segment(int type, int ackNo, String data) {
@@ -52,7 +51,6 @@ public class Segment {
         this.len = SOLID_LEN + data.length();
         this.calculateCheckSum();
         this.segStream = serialize();
-        log.info("累加器情况：" + this.toString());
     }
 
     public Segment(int type, int ackNo, int winSize, int checksum, String data) {
@@ -66,7 +64,6 @@ public class Segment {
         this.checksum = 0;
         this.calculateCheckSum();
         this.segStream = serialize();
-        log.info("累加器情况：" + this.toString());
     }
 
     /** 将报文段信息转为字节流，不足一个字节补零，末尾添加TAIL表示界符 */

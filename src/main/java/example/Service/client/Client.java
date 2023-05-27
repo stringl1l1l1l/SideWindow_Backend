@@ -52,6 +52,10 @@ public class Client {
         if (in != null) in.close();
         if (out != null) out.close();
         if (clientSocket != null) clientSocket.close();
+        in = null;
+        out = null;
+        clientSocket = null;
+        Segment.accelerateACK = Global.INIT_SEG_NO;
         log.info("客户端断开连接");
     }
 

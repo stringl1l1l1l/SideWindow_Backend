@@ -78,6 +78,9 @@ public class SendWindow {
         return this.posEnd != this.posCur;
     }
 
+    public boolean hasCached() {
+        return this.cacheSize > this.posEnd;
+    }
     /**
      * 获取当前发送窗口所有可用的报文
      *
@@ -103,21 +106,26 @@ public class SendWindow {
         this.posEnd = newEnd;
     }
 
+    public int[][] getSendWindow() {
+        int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
+        int pos1 = 0, pos2 = 0;
+        for (int i = posBeg; i < posCur; i++) win1[pos1++] = segmentList[i].segment.segNo;
+        for (int i = posCur; i < posEnd; i++) win2[pos2++] = segmentList[i].segment.segNo;
+        return new int[][] {win1, win2};
+    }
     /**
      * 打印当前发送窗口状态信息
      *
      * @return
      */
-    public synchronized int[][] printSendWindow() {
-        int[] win1 = new int[posCur - posBeg], win2 = new int[posEnd - posCur];
-        int pos1 = 0, pos2 = 0;
-        for (int i = posBeg; i < posCur; i++) win1[pos1++] = segmentList[i].segment.segNo;
-        for (int i = posCur; i < posEnd; i++) win2[pos2++] = segmentList[i].segment.segNo;
+    public synchronized void printSendWindow() {
+        int[] win1, win2;
+        win1 = getSendWindow()[0];
+        win2 = getSendWindow()[1];
         log.info("当前发送窗口状态为：");
         log.info("beg: " + this.posBeg + ", cur: " + this.posCur + ", end: " + this.posEnd);
         log.info("已发送报文：" + Arrays.toString(win1));
         log.info("未发送报文：" + Arrays.toString(win2));
-        return new int[][] {win1, win2};
     }
 
     public synchronized boolean isAllAck() {

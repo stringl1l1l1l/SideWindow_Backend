@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.Semaphore;
 
 @WebServlet("/client/*")
 public class ClientServlet extends HttpServlet {
@@ -25,6 +26,7 @@ public class ClientServlet extends HttpServlet {
     private final Gson gson = new Gson();
     private PackListener packListener = null;
     private final Logger log = Logger.getLogger(ClientServlet.class);
+    private Thread receivePackThread = null;
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
@@ -56,8 +58,9 @@ public class ClientServlet extends HttpServlet {
         String url = req.getRequestURI();
         if (url.endsWith("/connect")) {
             client = new Client();
-            packListener = new PackListener(client);
+
             client.startConnection(requestBodyJson.extra.host, requestBodyJson.extra.port);
+            packListener = new PackListener(client);
             packListener.start();
             out.println(
                     GsonUtils.msg2Json(
@@ -66,12 +69,28 @@ public class ClientServlet extends HttpServlet {
                                     + requestBodyJson.extra.host
                                     + ":"
                                     + requestBodyJson.extra.port));
+        } else if (url.endsWith("/check")) {
+            log.info("正在探测");
+            try {
+                Global.receiveDone.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            String recData = client.receiveWindow.getReceivedData();
+            out.println(
+                    GsonUtils.msg2Json(
+                            HttpServletResponse.SC_OK, "返回客户端已接收数据", new ExtraInfo(recData)));
+            log.info("探测完成");
         } else if (url.endsWith("/stop")) {
             try {
                 if (client != null) {
                     if (packListener != null) packListener.interrupt();
                     client.stopConnection();
-                    out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "已断开连接"));
+                    client = null;
+                    if (receivePackThread != null) receivePackThread.interrupt();
+                    receivePackThread = null;
+                    Global.receiveDone = new Semaphore(0);
+                    out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "客户端已断开连接"));
                 } else {
                     out.println(
                             GsonUtils.msg2Json(

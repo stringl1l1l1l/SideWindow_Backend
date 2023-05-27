@@ -89,16 +89,20 @@ public class ReceiveWindow {
         return win;
     }
 
-    /** 打印接收缓存中所有已接收内容 */
-    public void printReceivedData() {
+    public String getReceivedData() {
         StringBuilder stringBuilder = new StringBuilder(Global.MAX_DATA_SIZE);
         for (SegmentInfo info : segmentList) {
             if (info.segment == null) break;
             stringBuilder.append(info.segment.data);
         }
+        return stringBuilder.toString();
+    }
+
+    /** 打印接收缓存中所有已接收内容 */
+    public void printReceivedData() {
         System.out.println(
                 "_______________________接收端已接收内容_______________________\n"
-                        + stringBuilder
+                        + getReceivedData()
                         + "\n_______________________接收端已接收内容_______________________");
     }
 }
