@@ -11,9 +11,20 @@
   <component name="ChangeListManager">
     <list default="true" id="11ee3d85-c452-4e1e-a5ab-da431495278a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ClientServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ClientServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ClientWebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ClientWebSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ServerServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ServerServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Controller/ServerWebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Controller/ServerWebSocket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ExtraInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ExtraInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/ReceiveWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SegmentInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Entity/SendWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Model/JsonPack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Model/JsonPack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/Global.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/client/PackListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/client/PackListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/server/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/Scanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/Service/server/SendThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/Service/server/SendThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/SendThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/SideWindows-1.0-SNAPSHOT/WEB-INF/classes/example/Service/server/SendThread.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/example/Service/server/SendThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/example/Service/server/SendThread.class" afterDir="false" />
     </list>
@@ -258,6 +269,7 @@
       <workItem from="1685090404759" duration="17057000" />
       <workItem from="1685157291539" duration="17151000" />
       <workItem from="1685178247236" duration="18973000" />
+      <workItem from="1685234722722" duration="11409000" />
     </task>
     <servers />
   </component>
@@ -270,11 +282,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/example/utils/GsonUtils.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.nio.BufferOverflowException" package="java.nio" />
           <option name="timeStamp" value="8" />

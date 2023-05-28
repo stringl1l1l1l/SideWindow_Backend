@@ -7,12 +7,12 @@ import java.util.Arrays;
 
 public class ReceiveWindow {
     private int posBeg;
-    public int posCur; // posCur为最后按序到达的位置的后一位置
+    public transient int posCur; // posCur为最后按序到达的位置的后一位置
     private int posEnd;
     private final SegmentInfo[] segmentList;
     private int cacheSize;
     private int windowSize;
-    private Logger log = Logger.getLogger(ReceiveWindow.class);
+    private transient Logger log = Logger.getLogger(ReceiveWindow.class);
 
     public ReceiveWindow() {
         windowSize = Global.REC_WIND;
@@ -48,21 +48,26 @@ public class ReceiveWindow {
         this.windowSize = newSize;
     }
 
-    public synchronized void capturePack(Segment packSeg) {
+    public synchronized int capturePack(Segment packSeg) {
         if (packSeg.type == Global.TYPE_PACK) {
             // 如果序号落入接收窗口内，且不是重复报文段，且未出错，且按序到达，则将报文段放入接收窗口
             if (segmentList[this.posCur].isAck) {
                 log.error("重复报文段");
+                return Global.RECV_REPEAT;
             } else if (packSeg.hasError()) {
                 log.error("报文段出错");
+                return Global.RECV_ERROR;
             } else if (segmentList[this.posCur].segNo != packSeg.segNo) {
                 log.error("报文段序号没有按序到达，期望报文序号为：" + segmentList[this.posCur].segNo);
+                return Global.RECV_BAD_SEQUENCE;
             } else {
                 segmentList[this.posCur].segment = packSeg;
                 segmentList[this.posCur].isAck = true;
                 this.posCur++;
             }
+            return Global.RECV_OK;
         }
+        return Global.RECV_OTHER;
     }
 
     /**

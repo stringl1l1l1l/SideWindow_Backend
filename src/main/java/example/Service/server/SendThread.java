@@ -3,6 +3,7 @@ package example.Service.server;
 import example.Controller.ServerWebSocket;
 import example.Entity.ExtraInfo;
 import example.Entity.Segment;
+import example.Entity.SegmentInfo;
 import example.Service.Global;
 import example.utils.GsonUtils;
 import org.apache.log4j.Logger;
@@ -21,7 +22,7 @@ public class SendThread extends Thread {
     @Override
     public void run() {
         // 主线程持续监听是否有可发送报文
-        ArrayList<Segment> tmp = new ArrayList<>();
+        ArrayList<SegmentInfo> tmp = new ArrayList<>();
         while (!Thread.interrupted()) {
             try {
                 Global.readyToSend.acquire();
@@ -47,7 +48,9 @@ public class SendThread extends Thread {
                         for (Segment curSeg : segments) {
                             server.sendByteStream(curSeg.serialize());
                         }
-                        tmp.addAll(segments);
+                        for (Segment segment : segments) {
+                            tmp.add(new SegmentInfo(segment));
+                        }
                     }
                 }
             } catch (Exception e) {

@@ -26,14 +26,7 @@ public class ServerWebSocket {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        // 收到消息时执行的代码
         log.info("收到消息：" + message);
-        //        // 向客户端发送消息
-        //        try {
-        //            session.getBasicRemote().sendText(GsonUtils.msg2Json(200, "这是来自服务器的消息"));
-        //        } catch (IOException e) {
-        //            e.printStackTrace();
-        //        }
     }
 
     @OnClose

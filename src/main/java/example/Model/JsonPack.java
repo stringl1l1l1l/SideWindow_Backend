@@ -30,22 +30,16 @@ public class JsonPack {
         this.extra = extra;
     }
 
-    public JsonPack(int status, String msg, ArrayList<Segment> list, ExtraInfo extra) {
+    public JsonPack(int status, String msg, ArrayList<SegmentInfo> list, ExtraInfo extra) {
         this.status = status;
         this.msg = msg;
-        this.segInfoList = new ArrayList<>();
-        for (Segment segment : list) {
-            this.segInfoList.add(new SegmentInfo(segment));
-        }
+        this.segInfoList = list;
         this.extra = extra;
     }
 
-    public JsonPack(int status, String msg, List<Segment> segList) {
+    public JsonPack(int status, String msg, ArrayList<SegmentInfo> segList) {
         this.status = status;
         this.msg = msg;
-        this.segInfoList = new ArrayList<>();
-        for (Segment segment : segList) {
-            this.segInfoList.add(new SegmentInfo(segment));
-        }
+        this.segInfoList = segList;
     }
 }

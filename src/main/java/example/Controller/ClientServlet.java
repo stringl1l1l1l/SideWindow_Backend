@@ -87,6 +87,16 @@ public class ClientServlet extends HttpServlet {
                         GsonUtils.msg2Json(
                                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage()));
             }
+        } else if (url.endsWith("/changeRecvWinSize")) {
+            int size = requestBodyJson.extra.newRecvWinSize;
+            if (client != null) {
+                Global.SEND_WIND = size;
+                client.receiveWindow.changeWindowSize(size);
+                out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "接收窗口大小重设为" + size));
+            } else {
+                out.println(
+                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "非法操作"));
+            }
         }
     }
 }

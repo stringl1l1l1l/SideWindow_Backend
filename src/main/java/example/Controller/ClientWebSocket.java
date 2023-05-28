@@ -10,31 +10,18 @@ import java.io.IOException;
 
 @ServerEndpoint("/client_socket")
 public class ClientWebSocket {
-
     public static Session session = null;
     private final Logger log = Logger.getLogger(ServerWebSocket.class);
 
     @OnOpen
     public void onOpen(Session session) {
-        log.info("已启动");
-        ServerWebSocket.session = session;
-        try {
-            session.getBasicRemote().sendText("clientSocket已启动");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.info("ClientWebSocket已启动");
+        ClientWebSocket.session = session;
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        // 收到消息时执行的代码
-        System.out.println("收到消息：" + message);
-        // 向客户端发送消息
-        try {
-            session.getBasicRemote().sendText("这是来自服务器的消息");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        log.info("收到消息：" + message);
     }
 
     @OnClose

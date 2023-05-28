@@ -1,8 +1,11 @@
 package example.Entity;
 
+import example.Controller.ServerWebSocket;
 import example.Service.Global;
+import example.utils.GsonUtils;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -61,8 +64,18 @@ public class SendWindow {
                         && !segmentList[i].isAck
                         && segmentList[i].segment.segNo == ackSeg.ackNo - 1) {
                     flag = true;
-
                     //                    this.posBeg = i + 1;
+                    ArrayList<SegmentInfo> tmp = new ArrayList<>();
+                    SegmentInfo info = new SegmentInfo(ackSeg);
+                    tmp.add(info);
+                    if (ServerWebSocket.session != null) {
+                        String res = GsonUtils.msg2Json(201, "返回已接收ACK报文", tmp);
+                        try {
+                            ServerWebSocket.session.getBasicRemote().sendText(res);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     break;
                 }
             }

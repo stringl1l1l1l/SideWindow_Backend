@@ -1,11 +1,16 @@
 package example.Service.server;
 
+import example.Controller.ClientWebSocket;
+import example.Entity.ExtraInfo;
 import example.Entity.Segment;
+import example.Entity.SegmentInfo;
 import example.Service.Global;
+import example.utils.GsonUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +33,13 @@ public class Scanner extends TimerTask {
                         i < server.sendWindow.getPosCur();
                         i++) {
                     Segment curSeg = server.sendWindow.getSpecifiedSegment(i);
-
+                    SegmentInfo info = new SegmentInfo(curSeg, false, false, true);
+                    ArrayList<SegmentInfo> tmp = new ArrayList<>();
+                    tmp.add(info);
+                    String res =
+                            GsonUtils.msg2Json(
+                                    200, "返回重传报文和窗口", tmp, new ExtraInfo(server.sendWindow));
+                    ClientWebSocket.session.getBasicRemote().sendText(res);
                     log.error(Global.PERIOD_MS / 1000 + "s内未收到ACK，超时重传：");
                     server.sendByteStream(curSeg.serialize());
                 }

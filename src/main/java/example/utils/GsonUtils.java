@@ -3,6 +3,7 @@ package example.utils;
 import com.google.gson.Gson;
 import example.Entity.ExtraInfo;
 import example.Entity.Segment;
+import example.Entity.SegmentInfo;
 import example.Model.JsonPack;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class GsonUtils {
     private static final Gson gson = new Gson();
 
-    public static String msg2Json(int code, String msg, List<Segment> segmentList) {
+    public static String msg2Json(int code, String msg, ArrayList<SegmentInfo> segmentList) {
         return gson.toJson(new JsonPack(code, msg, segmentList));
     }
 
@@ -28,7 +29,7 @@ public class GsonUtils {
     }
 
     public static String msg2Json(
-            int code, String msg, ArrayList<Segment> sendSegArrayList, ExtraInfo extra) {
-        return gson.toJson(new JsonPack(code, msg, sendSegArrayList, extra));
+            int code, String msg, ArrayList<SegmentInfo> segmentInfoArrayList, ExtraInfo extra) {
+        return gson.toJson(new JsonPack(code, msg, segmentInfoArrayList, extra));
     }
 }

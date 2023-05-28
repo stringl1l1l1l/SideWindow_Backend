@@ -112,12 +112,17 @@ public class ServerServlet extends HttpServlet {
             if (server != null) {
                 server.sendMsg(requestBodyJson.extra.data);
                 Global.readyToSend.release();
-                //                try {
-                //                    Global.hasSendPack.acquire();
-                //                } catch (InterruptedException e) {
-                //                    e.printStackTrace();
-                //                }
                 out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "发送成功!"));
+            }
+        } else if (url.endsWith("/changeSendWinSize")) {
+            int size = requestBodyJson.extra.newSendWinSize;
+            if (server != null) {
+                Global.SEND_WIND = size;
+                server.sendWindow.changeWindowSize(size);
+                out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "发送窗口大小重设为" + size));
+            } else {
+                out.println(
+                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "非法操作"));
             }
         }
     }
