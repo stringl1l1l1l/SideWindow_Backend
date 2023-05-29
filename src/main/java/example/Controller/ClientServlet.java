@@ -42,30 +42,19 @@ public class ClientServlet extends HttpServlet {
 
         String url = req.getRequestURI();
         if (url.endsWith("/connect")) {
-            client = new Client();
-            client.startConnection(requestBodyJson.extra.host, requestBodyJson.extra.port);
-            packListener = new PackListener(client);
-            packListener.start();
-            out.println(
-                    GsonUtils.msg2Json(
-                            HttpServletResponse.SC_OK,
-                            "客户端已连接"
-                                    + requestBodyJson.extra.host
-                                    + ":"
-                                    + requestBodyJson.extra.port));
-            //        } else if (url.endsWith("/check")) {
-            //            log.info("正在探测");
-            //            try {
-            //                Global.receiveDone.acquire();
-            //            } catch (InterruptedException e) {
-            //                e.printStackTrace();
-            //            }
-            //            String recData = client.receiveWindow.getReceivedData();
-            //            out.println(
-            //                    GsonUtils.msg2Json(
-            //                            HttpServletResponse.SC_OK, "返回客户端已接收数据", new
-            // ExtraInfo(recData)));
-            //            log.info("探测完成");
+            if (client == null) {
+                client = new Client();
+                client.startConnection(requestBodyJson.extra.host, requestBodyJson.extra.port);
+                packListener = new PackListener(client);
+                packListener.start();
+                out.println(
+                        GsonUtils.msg2Json(
+                                HttpServletResponse.SC_OK,
+                                "客户端已连接"
+                                        + requestBodyJson.extra.host
+                                        + ":"
+                                        + requestBodyJson.extra.port));
+            }
         } else if (url.endsWith("/stop")) {
             try {
                 if (client != null) {
@@ -89,14 +78,21 @@ public class ClientServlet extends HttpServlet {
             }
         } else if (url.endsWith("/changeRecvWinSize")) {
             int size = requestBodyJson.extra.newRecvWinSize;
-            if (client != null) {
+            if (client != null && size >= Global.SEND_WIND) {
                 Global.SEND_WIND = size;
                 client.receiveWindow.changeWindowSize(size);
                 out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "接收窗口大小重设为" + size));
+            } else if (size < Global.SEND_WIND) {
+                out.println(
+                        GsonUtils.msg2Json(
+                                HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "发送窗口大小不得大于接收窗口"));
             } else {
                 out.println(
-                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "非法操作"));
+                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "客户端未启动"));
             }
+        } else if (url.endsWith("/clearReceiveCache")) {
+            if (client != null) client.receiveWindow.clearReceivedCache();
+            out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "缓存已清除"));
         }
     }
 }

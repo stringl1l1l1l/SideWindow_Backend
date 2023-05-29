@@ -49,15 +49,16 @@ public class Server {
     }
 
     /**
-     * 发送一个任意长度字符串，存入发送缓存区
+     * 发送一个任意长度字符串, 存入发送缓存区, 返回分片数量
      *
      * @param msg 任意长度的字符串
      */
-    public synchronized void sendMsg(String msg) {
+    public synchronized int sendMsg(String msg) {
         Segment segment = new Segment(msg);
-        ArrayList<Segment> pieces = segment.slice(Global.SLICE_SIZE);
+        ArrayList<Segment> pieces = segment.slice(Global.MSS);
         for (Segment piece : pieces) this.sendWindow.insertSegment(piece);
         this.sendWindow.changeWindowSize(Global.SEND_WIND);
+        return pieces.size();
     }
 
     /**
@@ -174,8 +175,8 @@ public class Server {
         server.sendWindow.printSendWindow();
         server.start(Global.SERVER_PORT);
 
-        Timer timer = new Timer();
-        timer.schedule(new Scanner(server), Global.PERIOD_MS, Global.PERIOD_MS);
+        //        Timer timer = new Timer();
+        //        timer.schedule(new Scanner(server), Global.PERIOD_MS, Global.PERIOD_MS);
 
         ACKListener ackListener = new ACKListener(server);
         ackListener.start();

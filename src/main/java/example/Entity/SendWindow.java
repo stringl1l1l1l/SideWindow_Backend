@@ -38,9 +38,12 @@ public class SendWindow {
     public SendWindow() {
         windowSize = Global.SEND_WIND;
         posCur = posBeg = 0;
-        posEnd = windowSize;
+        posEnd = 0;
         cacheSize = 0;
         segmentList = new SegmentInfo[Global.MAX_CACHE_SIZE];
+        for (int i = Global.INIT_SEG_NO; i < Global.INIT_SEG_NO + 100; i++) {
+            segmentList[i - Global.INIT_SEG_NO] = new SegmentInfo(i); // 调用构造函数进行初始化
+        }
     }
 
     public void insertSegment(Segment segment) {
@@ -53,36 +56,34 @@ public class SendWindow {
      *
      * @param ackSeg 确认报文
      */
-    public synchronized void captureACK(Segment ackSeg) {
+    public synchronized int captureACK(Segment ackSeg) {
         // 当前接收到了ACK报文
         if (ackSeg.type == Global.TYPE_ACK) {
             boolean flag = false; // 用于标识ACK确认号是否落在已发送窗口中，如果没有，什么也不做
-            for (int i = posCur - 1; i >= posBeg; i--) {
-                // 找到已发送的，与(确认号 - 1)一致且没有被重复确认的报文段
+            if (ackSeg.hasError()) {
+                log.error("报文段出错");
+                return Global.RECV_ERROR;
+            }
+            int i; // i记录被确认报文位置，segmentList[i].segment.segNo == ackSeg.ackNo - 1
+            for (i = posCur - 1; i >= posBeg; i--) {
+                // 倒序找到已发送的，与(确认号 - 1)一致且没有被重复确认的报文段
                 if (segmentList[i].isSend
-                        && !ackSeg.hasError()
                         && !segmentList[i].isAck
                         && segmentList[i].segment.segNo == ackSeg.ackNo - 1) {
                     flag = true;
-                    //                    this.posBeg = i + 1;
-                    ArrayList<SegmentInfo> tmp = new ArrayList<>();
-                    SegmentInfo info = new SegmentInfo(ackSeg);
-                    tmp.add(info);
-                    if (ServerWebSocket.session != null) {
-                        String res = GsonUtils.msg2Json(201, "返回已接收ACK报文", tmp);
-                        try {
-                            ServerWebSocket.session.getBasicRemote().sendText(res);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                     break;
                 }
             }
             // 根据ACK报文返回的接收窗口大小调整发送窗口和尾指针
-            changeWindowSize(ackSeg.winSize);
-            if (flag) log.info("ACK" + ackSeg.ackNo + "已确认");
+            changeWindowSize(Math.min(ackSeg.winSize, this.windowSize));
+            if (flag) {
+                log.info("ACK" + ackSeg.ackNo + "已确认");
+                for (int j = posBeg; j <= i; j++) segmentList[j].isAck = true;
+                this.posBeg = i + 1; // 调整发送窗口到确认报文后
+                return Global.RECV_OK;
+            }
         }
+        return Global.RECV_OTHER;
     }
 
     /**
@@ -92,11 +93,9 @@ public class SendWindow {
         return this.posEnd - this.posCur;
     }
 
-    public synchronized void hasReceiveACK() {
-        // 移动发送窗口的起始指针到已确认报文处
-        this.posBeg = this.posCur;
-    }
-
+    /**
+     * @return 当前发送窗口是否有缓存没被发送
+     */
     public boolean hasCached() {
         return this.cacheSize > this.posEnd;
     }
@@ -105,11 +104,11 @@ public class SendWindow {
      *
      * @return 待发送的报文段列表
      */
-    public synchronized ArrayList<Segment> getAvailable() {
-        ArrayList<Segment> list = new ArrayList<>();
+    public synchronized ArrayList<SegmentInfo> getAvailable() {
+        ArrayList<SegmentInfo> list = new ArrayList<>();
         while (posCur < posEnd) {
-            list.add(segmentList[posCur].segment);
             segmentList[posCur].isSend = true;
+            list.add(segmentList[posCur]);
             posCur++;
         }
         return list;
@@ -125,13 +124,6 @@ public class SendWindow {
         this.posEnd = newEnd;
     }
 
-    public int[][] getSendWindow() {
-        int[] win1 = new int[posCur - posBeg], win2 = new int[windowSize];
-        int pos1 = 0, pos2 = 0;
-        for (int i = posBeg; i < posCur; i++) win1[pos1++] = segmentList[i].segment.segNo;
-        for (int i = 0; i < windowSize; i++) win2[pos2++] = segmentList[posBeg].segment.segNo + i;
-        return new int[][] {win1, win2};
-    }
     /**
      * 打印当前发送窗口状态信息
      *

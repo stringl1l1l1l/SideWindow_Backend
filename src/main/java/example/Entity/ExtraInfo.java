@@ -8,6 +8,7 @@ public class ExtraInfo {
     public ReceiveWindow recvWin = null;
     public int newSendWinSize;
     public int newRecvWinSize;
+    public int newMSS;
 
     public ExtraInfo(SendWindow sendWin) {
         this.sendWin = sendWin;

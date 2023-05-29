@@ -24,20 +24,24 @@ public class PackListener extends Thread {
     @Override
     public void run() {
         while (true) {
-            int ackNo = -1;
+
             try {
                 // 发送端发送未完毕，继续
                 if (Thread.interrupted()) {
                     log.info("客户端监听线程已断开");
                     break;
                 }
+                int ackNo = -1;
+                int revcStatus = -1;
                 if (client.in.available() != 0) {
                     Segment segment = client.readByteStream2Segment();
                     log.info("客户端接收到报文: " + segment.toString());
-                    int revcStatus = client.receiveWindow.capturePack(segment);
+                    revcStatus = client.receiveWindow.capturePack(segment);
                     client.receiveWindow.printRecWindow();
                     if (ClientWebSocket.session != null) {
-                        SegmentInfo info = new SegmentInfo(segment, false, false, revcStatus);
+                        SegmentInfo info =
+                                new SegmentInfo(
+                                        segment, revcStatus, client.receiveWindow.randomNum);
                         ArrayList<SegmentInfo> tmp = new ArrayList<>();
                         tmp.add(info);
                         String res =
@@ -50,9 +54,15 @@ public class PackListener extends Thread {
                                                 client.receiveWindow));
                         ClientWebSocket.session.getBasicRemote().sendText(res);
                     }
+
                 }
-                // 接收端返回对按序到达的最后一个报文段的ACK
-                else if ((ackNo = client.receiveWindow.needACK()) != -1) {
+                // 接收端返回对最后一个报文段的ACK
+                else if ((ackNo = client.receiveWindow.needACK()) != -1
+                        || revcStatus == Global.RECV_REPEAT) {
+                    // 阻塞1s, 便于观察
+                    sleep(1000);
+                    // 如果接收到重复报文，说明发送端没收到ACK，这时候需要重发对已接收内容的ACK
+                    if (revcStatus == Global.RECV_REPEAT) ackNo = client.receiveWindow.getPosBeg();
                     Segment segment = new Segment(Global.TYPE_ACK, ackNo, 4, 4, "ACK" + ackNo);
                     log.info("客户端发送确认报文：" + segment.toString());
                     client.sendByteStream(segment.segStream);
@@ -64,15 +74,17 @@ public class PackListener extends Thread {
                         SegmentInfo info = new SegmentInfo(segment);
                         ArrayList<SegmentInfo> tmp = new ArrayList<>();
                         tmp.add(info);
-                        String res = GsonUtils.msg2Json(201, "返回已发送ACK", tmp);
+                        String res =
+                                GsonUtils.msg2Json(
+                                        201, "返回已发送ACK", tmp, new ExtraInfo(client.receiveWindow));
                         ClientWebSocket.session.getBasicRemote().sendText(res);
                     }
                     // 全局通知此时接收端的接收内容已更新
                     Global.receiveDone.release();
                 }
-            } catch (IOException e) {
-                this.interrupt();
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+                break;
             }
         }
     }

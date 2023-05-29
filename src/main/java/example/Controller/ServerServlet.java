@@ -24,6 +24,7 @@ import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 @WebServlet("/server/*")
 public class ServerServlet extends HttpServlet {
@@ -49,16 +50,10 @@ public class ServerServlet extends HttpServlet {
 
         String url = req.getRequestURI();
         if (url.endsWith("/start")) {
-            server = new Server();
-            ackListener = new ACKListener(server);
-            scanner = new Scanner(server);
-
-            // 创建发送线程
-            if (sendThread == null) {
-                sendThread = new SendThread(server);
-                Global.executor.execute(sendThread);
-            }
-
+            if (server == null) server = new Server();
+            if (ackListener == null) ackListener = new ACKListener(server);
+            if (scanner == null) scanner = new Scanner(server);
+            if (sendThread == null) sendThread = new SendThread(server);
             // 在子线程中运行阻塞方法
             if (startThread == null) {
                 startThread =
@@ -68,7 +63,12 @@ public class ServerServlet extends HttpServlet {
                                 try {
                                     server.start(requestBodyJson.extra.port);
                                     Global.executor.execute(ackListener);
-                                    Global.executor.execute(scanner);
+                                    Global.timer.scheduleAtFixedRate(
+                                            scanner,
+                                            Global.PERIOD_MS,
+                                            Global.PERIOD_MS,
+                                            TimeUnit.SECONDS);
+                                    Global.executor.execute(sendThread);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -90,9 +90,11 @@ public class ServerServlet extends HttpServlet {
                 if (server != null) {
                     server.stop();
                     Global.executor.shutdownNow();
+                    Global.timer.shutdown();
                     Global.hasSendPack = new Semaphore(0);
                     Global.readyToSend = new Semaphore(0);
                     Global.executor = Executors.newCachedThreadPool();
+                    Global.timer = Executors.newScheduledThreadPool(1);
                     out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "服务端已关闭"));
                 } else // 未检测到启动进程，说明没有启动
                 out.println(
@@ -111,19 +113,27 @@ public class ServerServlet extends HttpServlet {
         } else if (url.endsWith("/send")) {
             if (server != null) {
                 server.sendMsg(requestBodyJson.extra.data);
-                Global.readyToSend.release();
+                Global.readyToSend.release(); // 允许运行发送线程
                 out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "发送成功!"));
             }
         } else if (url.endsWith("/changeSendWinSize")) {
             int size = requestBodyJson.extra.newSendWinSize;
-            if (server != null) {
+            if (server != null && Global.REC_WIND >= size) {
                 Global.SEND_WIND = size;
                 server.sendWindow.changeWindowSize(size);
                 out.println(GsonUtils.msg2Json(HttpServletResponse.SC_OK, "发送窗口大小重设为" + size));
-            } else {
+            } else if (Global.REC_WIND < size) {
                 out.println(
-                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "非法操作"));
-            }
+                        GsonUtils.msg2Json(
+                                HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "发送窗口大小不得大于接收窗口"));
+            } else
+                out.println(
+                        GsonUtils.msg2Json(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "服务端未启动"));
+        } else if (url.endsWith("/changeMSS")) {
+            Global.MSS = requestBodyJson.extra.newMSS;
+            out.println(
+                    GsonUtils.msg2Json(
+                            HttpServletResponse.SC_OK, "MSS重设为" + requestBodyJson.extra.newMSS));
         }
     }
 }

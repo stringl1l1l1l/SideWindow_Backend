@@ -15,13 +15,8 @@ public class ServerWebSocket {
 
     @OnOpen
     public void onOpen(Session session) {
-        log.info("已启动");
+        log.info("ServerWebSocket已启动");
         ServerWebSocket.session = session;
-        //        try {
-        //            session.getBasicRemote().sendText(GsonUtils.msg2Json(200, "serverSocket已启动"));
-        //        } catch (IOException e) {
-        //            e.printStackTrace();
-        //        }
     }
 
     @OnMessage

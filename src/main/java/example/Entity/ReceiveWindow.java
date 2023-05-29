@@ -4,15 +4,18 @@ import example.Service.Global;
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class ReceiveWindow {
+    private static transient int N = 3;
     private int posBeg;
     public transient int posCur; // posCur为最后按序到达的位置的后一位置
     private int posEnd;
-    private final SegmentInfo[] segmentList;
+    private SegmentInfo[] segmentList;
     private int cacheSize;
     private int windowSize;
-    private transient Logger log = Logger.getLogger(ReceiveWindow.class);
+    public transient int randomNum = 0;
+    private final transient Logger log = Logger.getLogger(ReceiveWindow.class);
 
     public ReceiveWindow() {
         windowSize = Global.REC_WIND;
@@ -35,6 +38,18 @@ public class ReceiveWindow {
         }
     }
 
+    public int getPosBeg() {
+        return posBeg;
+    }
+
+    public int getPosCur() {
+        return posCur;
+    }
+
+    public int getPosEnd() {
+        return posEnd;
+    }
+
     public void insertSegInfo(int segNo) {
         assert (cacheSize != Global.MAX_CACHE_SIZE);
         segmentList[cacheSize++] = new SegmentInfo(segNo);
@@ -49,32 +64,51 @@ public class ReceiveWindow {
     }
 
     public synchronized int capturePack(Segment packSeg) {
-        if (packSeg.type == Global.TYPE_PACK) {
-            // 如果序号落入接收窗口内，且不是重复报文段，且未出错，且按序到达，则将报文段放入接收窗口
-            if (segmentList[this.posCur].isAck) {
-                log.error("重复报文段");
-                return Global.RECV_REPEAT;
-            } else if (packSeg.hasError()) {
-                log.error("报文段出错");
-                return Global.RECV_ERROR;
-            } else if (segmentList[this.posCur].segNo != packSeg.segNo) {
-                log.error("报文段序号没有按序到达，期望报文序号为：" + segmentList[this.posCur].segNo);
-                return Global.RECV_BAD_SEQUENCE;
-            } else {
-                segmentList[this.posCur].segment = packSeg;
-                segmentList[this.posCur].isAck = true;
-                this.posCur++;
+        Random random = new Random();
+        int randomNumber = random.nextInt(4); // 生成 0 到 3 的随机数
+        this.randomNum = randomNumber;
+        // 若随机情况为正常
+        if (randomNumber == Global.RECV_OK) {
+            if (packSeg.type == Global.TYPE_PACK) {
+                int flag = 0;
+                if (packSeg.hasError()) {
+                    log.error("报文段出错");
+                    return Global.RECV_ERROR;
+                }
+                // 如果序号落入接收窗口内，且不是重复报文段，且未出错，则将报文段放入接收窗口，并调整指针
+                for (int i = posBeg; i < posEnd; i++) {
+                    if (segmentList[i].segNo == packSeg.segNo) {
+                        if (segmentList[i].isAck) {
+                            log.error("重复报文段");
+                            return Global.RECV_REPEAT;
+                        } else {
+                            flag = 1;
+                            segmentList[i].segment = packSeg;
+                            segmentList[i].isAck = true;
+                            break;
+                        }
+                    }
+                }
+                if (flag == 1) {
+                    // 接收报文后，重新调整posCur到连续接收的位置
+                    int i = posCur;
+                    while (i != posEnd && segmentList[i].isAck) i++;
+                    posCur = i;
+                    return Global.RECV_OK;
+                } else return Global.RECV_REJECT;
             }
-            return Global.RECV_OK;
         }
-        return Global.RECV_OTHER;
+        return randomNumber;
     }
 
     /**
-     * @return 当前窗口是否有报文段需要发送ACK，如果有返回应发送的ACK号，否则返回-1
+     * @return 当前窗口是否已累计到指定个数报文段？如果是返回应发送的ACK号，否则返回-1
      */
     public synchronized int needACK() {
-        return (this.posBeg == this.posCur) ? -1 : this.segmentList[this.posCur].segNo;
+        int acceptCnt = this.posCur - this.posBeg;
+        if (this.posCur == this.posEnd || acceptCnt >= ReceiveWindow.N)
+            return segmentList[this.posCur].segNo;
+        else return -1;
     }
 
     public synchronized void hasSendACK() {
@@ -97,10 +131,17 @@ public class ReceiveWindow {
     public String getReceivedData() {
         StringBuilder stringBuilder = new StringBuilder(Global.MAX_DATA_SIZE);
         for (SegmentInfo info : segmentList) {
-            if (info.segment == null) break;
-            stringBuilder.append(info.segment.data);
+            if (info.segment != null) stringBuilder.append(info.segment.data);
+            else break;
         }
         return stringBuilder.toString();
+    }
+
+    public void clearReceivedCache() {
+        for (SegmentInfo info : segmentList) {
+            if (info.segment != null) info.segment.data = "";
+            else break;
+        }
     }
 
     /** 打印接收缓存中所有已接收内容 */
